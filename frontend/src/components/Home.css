@@ -1,0 +1,27 @@
+/* frontend/src/components/Home.css */
+.home-container {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .home-container h1 {
+    font-size: 3em;
+    color: #2c3e50;
+  }
+  
+  .home-links {
+    margin-top: 20px;
+  }
+  
+  .home-links a {
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 1.2em;
+    color: #3498db;
+    font-weight: bold;
+  }
+  
+  .home-links a:hover {
+    text-decoration: underline;
+  }
+  
