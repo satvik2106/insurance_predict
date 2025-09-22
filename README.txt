@@ -281,3 +281,156 @@ services:
       - "7007:8080"
 To run this, navigate to the directory and run docker-compose up -d.
 ________________________________________
+
+Set 2: Food Ordering System
+QI. Software Requirement Specification (SRS)
+a. Abstract
+The Cafeteria Food Ordering System is a modern, web-based application designed to digitize and streamline the food ordering process for students and faculty on campus. The system provides an intuitive interface for browsing the cafeteria menu, placing orders, and making secure digital payments. It offers real-time order status updates for customers and a comprehensive dashboard for administrators to manage menu items, pricing, and orders. The primary objective is to enhance user convenience, reduce wait times, and improve the operational efficiency of the cafeteria.
+________________________________________
+b. Functional Requirements
+1.	User Authentication: Users (Students, Staff, Admin) must be able to create an account, log in, and log out.
+2.	Menu Management: Administrators must be able to add, update, delete, and categorize food items on the menu.
+3.	Order Placement: Customers must be able to browse the menu, add items to a cart, and place an order.
+4.	Payment Gateway: The system must integrate with a digital payment gateway to process online payments.
+5.	Order Tracking: Customers must be able to view the real-time status of their order.
+________________________________________
+c. Non-Functional Requirements
+1.	Performance: The system must load the menu and process an order within 3 seconds.
+2.	Security: All payment transactions must be encrypted using SSL/TLS.
+3.	Usability: The interface should be simple and self-explanatory.
+4.	Reliability: The system should have an uptime of 99.8%.
+________________________________________
+d. Identification of Users
+1.	Customer (Student/Faculty): The primary user who browses the menu and places orders.
+2.	Administrator (Cafeteria Staff): A privileged user who manages the menu and views incoming orders.
+________________________________________
+QII. Maven Web Application Development
+1.	Artifact name with <finalName>Food-System</finalName>:
+o	Generated Artifact: Food-System.war.
+o	Deployment Issues: Tomcat will use the filename as the application's context path, so the URL would be http://localhost:8080/Food-System/. This can cause "404 Not Found" errors if developers expect a different URL.
+2.	Download the repository and list files:
+Bash
+git clone https://github.com/kumbhambhargavi75/FoodSystem/
+cd FoodSystem
+ls -R
+3.	JUnit version is left out:
+o	What Maven will do: The build will fail because Maven requires an explicit version for every dependency.
+o	How to ensure a proper version: You must explicitly add the <version> tag inside the <dependency> block.
+4.	Misspelled <artifactId>:
+o	Error: The build will fail with a "Could not resolve dependencies" error because Maven can't find the library.
+o	Debugging: Check the pom.xml for typos or run mvn dependency:tree.
+5.	Impact of omitting <packaging> tag:
+Maven will default to jar packaging, creating a .jar file instead of a .war. This .jar file cannot be deployed on a Tomcat server.
+6.	Correcting the MySQL dependency:
+The provided XML snippet has misspelled tags: <groupdId> should be <groupId> and <artifactd> should be <artifactId>.
+o	Correct Coordinates:
+XML
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.28</version>
+</dependency>
+7.	Missing information in tomcat7-maven-plugin:
+The plugin configuration is likely missing a specific <version> for the plugin itself and a <configuration> block with a defined <path> for the application's context URL.
+8.	The <url> tag:
+o	Mistake: The snippet url>...</url> is missing the opening angle bracket (<).
+o	Purpose: The <url> element in a pom.xml is purely informational. It provides a link to the project's website and has no effect on the build process.
+9.	Removing <contextPath> from the Tomcat plugin:
+Without <contextPath>, the application's context path will default to the project's <artifactId>, which might not be the desired URL.
+10.	Deployment URL .../FoodSystem-0.0.1-SNAPSHOT:
+o	Output: The homepage of your web application.
+o	Why: Tomcat uses the name of the WAR file (<artifactId>-<version>.war) as the default context path.
+11.	Effect of <finalName>FoodOrder</finalName>:
+o	WAR Name: FoodOrder.war.
+o	Deployment URL: http://localhost:8080/FoodOrder/.
+12.	Meaning of SNAPSHOT version:
+o	Meaning: A SNAPSHOT version indicates an unstable version currently in active development.
+o	Impact: Maven will always check for the latest SNAPSHOT build from the remote repository, which can lead to non-reproducible builds.
+13.	Applying a patch file with Git:
+o	Git Command: git apply path/to/the/css-fix.patch
+o	Ensuring it becomes part of commits: After applying and testing, you must stage and commit the changes:
+Bash
+git add .
+git commit -m "fix: Apply CSS fix from teammate"
+________________________________________
+QIII. Git & GitHub Integration
+1.	Initialize a Git repository: git init
+2.	Set global user name and email:
+Bash
+git config --global user.name "Your Name"
+git config --global user.email "youremail@example.com"
+3.	Stage, commit, and connect to GitHub:
+Bash
+git add .
+git commit -m "Initial commit"
+git remote add origin <your-github-repository-url>
+git push -u origin main
+4.	Stage a specific file and a folder: git add pom.xml src/main/java
+5.	git reset vs. git rm --cached:
+o	git reset HEAD <file>: Unstages a file, leaving it in your working directory as a modified file.
+o	git rm --cached <file>: Unstages the file AND tells Git to stop tracking it completely.
+6.	Save changes without committing: git stash
+7.	Remove a wrongly staged file (temp.txt) from staging: git reset HEAD temp.txt
+8.	Stash changes with a descriptive message: git stash save "WIP: Implementing user login"
+9.	Merge a feature branch into main:
+Bash
+git checkout main
+git pull origin main
+git merge feature/reviews
+10.	Copy a project to a teammate's local machine: git clone <repository_url>
+11.	Push a new local branch to GitHub: git push -u origin feature/real-time-status
+12.	Connect to GitHub using SSH:
+1.	Generate an SSH key pair: ssh-keygen -t ed25519 -C "your_email@example.com"
+2.	Add the public key to GitHub: Copy the contents of your public key file (e.g., ~/.ssh/id_ed25519.pub) and add it to your GitHub account settings.
+________________________________________
+QIV. Docker containerization
+1.	Pull nginx:latest from Docker Hub: docker pull nginx:latest
+2.	Run nginx in a detached container with port mapping: docker run -d --name web-nginx -p 8090:80 nginx:latest
+3.	Stop a container consuming high CPU: docker stop <container_name_or_id>
+4.	Stop and remove a running container: docker rm -f <container_name_or_id>
+5.	Run a Redis container with port mapping: docker run -d -p 8080:6379 redis
+6.	List running containers: docker ps
+7.	Pull and run python and list running containers:
+Bash
+docker pull python
+docker run -dit python
+docker ps
+8.	Handle a port conflict on 8080: The error "port is already allocated" means another process is using it. Solve it by stopping the other process or running your container on a different host port (e.g., -p 8081:8080).
+9.	Update configuration and rebuild/rerun:
+1.	Stop and remove the old container: docker rm -f <old_container_name>.
+2.	Update your source code.
+3.	Rebuild the Docker image: docker build -t your-app:v2 .
+4.	Rerun the container with the new image and port: docker run -d -p 8090:8080 your-app:v2.
+10.	Stop and start a running container: docker stop <container> and docker start <container>
+11.	Check container status: docker ps -a (to see status), docker logs <container> (to see application output).
+________________________________________
+QV. DOCKER COMPOSE
+Create a docker-compose.yml file to run the Food Ordering System with a PostgreSQL database.
+YAML
+version: '3.8'
+
+services:
+  database:
+    image: postgres:13
+    container_name: food-db
+    environment:
+      POSTGRES_DB: food_ordering_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    image: your-dockerhub-username/food-system:latest
+    container_name: food-ordering-app
+    ports:
+      - "7078:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/food_ordering_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      - database
+
+volumes:
+  postgres_data:
